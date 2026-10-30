@@ -1,44 +1,61 @@
 import 'package:flutter/material.dart';
 
-const String imageUrl = 'https://tinyurl.com/4fjh44fx';
+void main() => runApp(const MaterialApp(home: DragBoxScreen()));
 
-void main() => runApp(const MaterialApp(home: DragImageScreen()));
-
-class DragImageScreen extends StatefulWidget {
-  const DragImageScreen({super.key});
+class DragBoxScreen extends StatefulWidget {
+  const DragBoxScreen({super.key});
 
   @override
-  State<DragImageScreen> createState() => _DragImageScreenState();
+  State<DragBoxScreen> createState() => _DragBoxScreenState();
 }
 
-class _DragImageScreenState extends State<DragImageScreen> {
+class _DragBoxScreenState extends State<DragBoxScreen> {
   double x = 100;
   double y = 200;
 
-  Widget buildImage() {
-    return Image.network(imageUrl, width: 150, height: 150, fit: BoxFit.cover);
+  Widget buildBox() {
+    return Container(
+      width: 150,
+      height: 150,
+      color: Colors.blue,
+      alignment: Alignment.center,
+      child: const Text('Drag Me', style: TextStyle(color: Colors.white)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Drag Image"),),
+      appBar: AppBar(title: Text("Drag Box"),),
       body: Stack(
         children: [
           Positioned(
             left: x,
             top: y,
             child: LongPressDraggable<String>(
-              data: 'image',
-              feedback: Opacity(opacity: 0.7, child: buildImage()),
-              childWhenDragging: Opacity(opacity: 0.3, child: buildImage()),
+              data: 'box',
+              feedback: Container(
+                width: 150,
+                height: 150,
+                color: Colors.blue,
+                alignment: Alignment.center,
+                child: const Text(
+                  'Dragging...',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              childWhenDragging: Opacity(opacity: 0.3, child: buildBox()),
               onDragEnd: (details) {
                 setState(() {
                   x = details.offset.dx;
                   y = details.offset.dy;
                 });
               },
-              child: buildImage(),
+              child: buildBox(),
             ),
           ),
         ],
